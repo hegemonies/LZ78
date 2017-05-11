@@ -26,19 +26,20 @@ int main(int argc, char *argv[])
 	FILE *file_out = fopen("total.lz78", "w");
 
 	Dictionary **arr_dic = malloc(sizeof(Dictionary*));
-
+	//Dictionary *pointer;
 	//init_dic(arr_dic, 1);
 
-	/*
-	char *tmp = malloc(sizeof(char) * 10);
+	
+	char *tmp = malloc(sizeof(char));
 	char *buf = malloc(sizeof(char) * 512);
 	int t;
-	for (int i = 0; ((t = fread(tmp, 1, 1, file_in)) && !ferror(file_in)); i++) {
+	for (int i = 0; ((t = fread(tmp, 1, 1, file_in)) && !feof(file_in)); i++) {
 		//if (!ferror(file_in)) {
 		//buf = tmp;
 		strcat(buf, tmp);
 		if (!arr_dic[i]) {
 			//init_dic(arr_dic, i);
+			printf("1\n");
 			arr_dic[i] = malloc(sizeof(Dictionary*));
 			arr_dic[i]->n_str = i;
 			arr_dic[i]->str = buf;
@@ -47,10 +48,10 @@ int main(int argc, char *argv[])
 			//buf = NULL;
 			continue;
 		}
+
 		if (arr_dic[i] && !strcmp(arr_dic[i]->str, buf)) {
 			strcat(buf, tmp);
 			t = fread(tmp, 1, 1, file_in);
-
 		}
 		
 			
@@ -77,8 +78,8 @@ int main(int argc, char *argv[])
 	for (int i = 0; arr_dic[i]; i++) {
 		printf("%d :: %s\n", arr_dic[i]->n_str, arr_dic[i]->str);
 	}
-	*/
-
+	
+/*
 	char *tmp = malloc(sizeof(char));
 
 	arr_dic[0]->n_str = 0;
@@ -99,7 +100,9 @@ con:
 		} else if (strspn(arr_dic[i]->str, buf) < strlen(arr_dic[i]->str))
 	}
 
+*/
 
+	
 
 	fclose(file_in);
 	fclose(file_out);
