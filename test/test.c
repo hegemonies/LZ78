@@ -51,9 +51,10 @@ int main(void)
 	}
 
 
-
+	FILE *out = fopen("total.txt", "w");
 	for (int i = 0; arr[i]; i++) {
-		printf("%d :: %c\n", arr[i]->n_str, arr[i]->str);
+		fprintf(out, "%d,'%c'|", arr[i]->n_str, arr[i]->str);
 	}
+	fclose(out);
 	fclose(in);
 }
