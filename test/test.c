@@ -11,16 +11,16 @@ int main(void)
 {
 	FILE *in = fopen("war.txt", "r");
 
-	Dictionary *arr[10];
-
+	//Dictionary *arr[10];
+	Dictionary **arr = malloc(sizeof(Dictionary) * 50);
 	arr[0] = malloc(sizeof(Dictionary));
 	arr[0]->n_str = 0;
-	arr[0]->str = 0;
-
+	arr[0]->str = '\0';
+	/*
 	for (int i = 1; i < 10; i++) {
 		arr[i] = NULL;
 	}
-
+	*/
 	char tmp;
 	while (fread(&tmp, 1, 1, in) && !feof(in)) {
 		Dictionary dic_tmp;
@@ -52,7 +52,7 @@ int main(void)
 
 
 
-	for (int i = 0; i < 10 && arr[i] != NULL; i++) {
+	for (int i = 0; arr[i]; i++) {
 		printf("%d :: %c\n", arr[i]->n_str, arr[i]->str);
 	}
 	fclose(in);
