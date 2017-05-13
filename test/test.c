@@ -20,37 +20,69 @@ typedef struct {
 
 int find_i(Dictionary dic, char *tmp)
 {
-	for (int i = 0; i < dic.size) {
-		int t = strspn(dic.dic_i[i]->str, tmp);
+	if (!strcmp("\0", tmp)) {
+			return 1;
+		}
+	for (int i = 0; i < dic.size; i++) {
+		int t = strspn(dic.dic_i[i].str, tmp);
 		if (t == strlen(tmp)) {
 			return 0;
-		} else {
-			return -1;
 		}
 	}
+	return -1;
 }
 
 int main(void)
 {
 	FILE *in = fopen("war.txt", "r");
+
 	Dictionary dic;
 	dic.capacity = 65536;
 	dic.size = 1;
-	dic.dic_i->str = malloc(sizeof(char));
-	dic.dic_i->str = "";
-	
+	dic.dic_i = malloc(sizeof(Dictionary_item) * dic.capacity);
+	dic.dic_i[0].str = malloc(sizeof(char));
+	dic.dic_i[0].str = "";
+//printf("1\n");
 	char tmp;
 	char *tmp_dic = malloc(sizeof(char) * 256);
-	while (fread(tmp, 1, 1, in) && !feof(in)) {
-		strcat(tmp_dic, tmp);
+	while (fread(&tmp, 1, 1, in)) {
+		printf("start while:\n");
+		printf("tmp : %c\n", tmp);
+		strcat(tmp_dic, &tmp);
+		printf("tmp_dic : %s\n", tmp_dic);
 		int tmp_i = find_i(dic, tmp_dic);
+		if (tmp_i == 1) {
+			printf("НАШЕЛ КОНЕЦ ФАЙЛА\n");
+			break;
+		}
 		if (!tmp_i) {
-			//strcat(tmp_dic.str, tmp);
+			printf("НАШЕЛ ВХОЖДЕНИЕ\n");
+			printf("2\n");
+			//strcat(tmp_dic, &tmp);
 			continue;
 		} else {
-			dic.dic_i[dic.size] = tmp_i;
+			printf("3ашли\n");
+			printf("%s\n", tmp_dic);
+			dic.dic_i[dic.size].str = malloc(sizeof(char) * strlen(tmp_dic) + 1);
+		printf("РАЗ\n");
+			//dic.dic_i[dic.size].str = tmp_dic;
+			strcat(dic.dic_i[dic.size].str, tmp_dic);
+		printf("РАЗ\n");
+			dic.dic_i[dic.size].str[strlen(dic.dic_i[dic.size].str) + 1] = 0;
+		printf("РАЗ\n");
+			dic.size++;
+		//printf("%s\n", dic.dic_i[dic.size].str);
+			*tmp_dic = '\0';
+		//printf("%s\n", tmp_dic);
 		}
 	}
+
+	//FILE *out = fopen("total.lz78", "w");
+	for (int i = 0; i < dic.size; i++) {
+		printf("%d, '%s'\n", i, dic.dic_i[i]. str);
+	}
+	//fclose(out);
+	fclose(in);
 /*
 	//Dictionary dic[20];
 	//Dictionary *arr[10];
@@ -97,7 +129,7 @@ int main(void)
 	//for (int i = 0; arr[i]; i++) {
 		fwrite(arr, 1, sizeof(arr), out);
 	//}
-*/
 	fclose(out);
 	fclose(in);
+*/
 }
