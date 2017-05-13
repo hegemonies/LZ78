@@ -46,40 +46,50 @@ int main(void)
 	char tmp;
 	char *tmp_dic = malloc(sizeof(char) * 256);
 	while (fread(&tmp, 1, 1, in)) {
-		printf("start while:\n");
-		printf("tmp : %c\n", tmp);
+	printf("start while:\n");
+	printf("tmp : %c\n", tmp);
 		strcat(tmp_dic, &tmp);
-		printf("tmp_dic : %s\n", tmp_dic);
+	printf("tmp_dic : %s\n", tmp_dic);
 		int tmp_i = find_i(dic, tmp_dic);
 		if (tmp_i == 1) {
-			printf("НАШЕЛ КОНЕЦ ФАЙЛА\n");
+	//printf("НАШЕЛ КОНЕЦ ФАЙЛА\n");
 			break;
 		}
 		if (!tmp_i) {
-			printf("НАШЕЛ ВХОЖДЕНИЕ\n");
-			printf("2\n");
+	//printf("НАШЕЛ ВХОЖДЕНИЕ\n");
+	//printf("2\n");
 			//strcat(tmp_dic, &tmp);
 			continue;
 		} else {
-			printf("3ашли\n");
+	//printf("3ашли\n");
+			if(!strcmp(tmp_dic, "\0")) {
+				break;
+			}
 			printf("%s\n", tmp_dic);
 			dic.dic_i[dic.size].str = malloc(sizeof(char) * strlen(tmp_dic) + 1);
-		printf("РАЗ\n");
+	//printf("РАЗ\n");
 			//dic.dic_i[dic.size].str = tmp_dic;
 			strcat(dic.dic_i[dic.size].str, tmp_dic);
-		printf("РАЗ\n");
+	//printf("РАЗ\n");
 			dic.dic_i[dic.size].str[strlen(dic.dic_i[dic.size].str) + 1] = 0;
-		printf("РАЗ\n");
+	//printf("РАЗ\n");
 			dic.size++;
-		//printf("%s\n", dic.dic_i[dic.size].str);
+	//printf("%s\n", dic.dic_i[dic.size].str);
 			*tmp_dic = '\0';
-		//printf("%s\n", tmp_dic);
+	//printf("%s\n", tmp_dic);
 		}
 	}
-
+	/*
+	free(tmp_dic);
+	for (int i = 0; i < dic.size ; i++) {
+		free(dic.dic_i[i].str);
+	}
+	free(dic.dic_i);
+	*/
+	
 	//FILE *out = fopen("total.lz78", "w");
-	for (int i = 0; i < dic.size; i++) {
-		printf("%d, '%s'\n", i, dic.dic_i[i]. str);
+	for (int i = 0; i < dic.size - 1; i++) {
+		printf("%d, '%s'\n", i, dic.dic_i[i].str);
 	}
 	//fclose(out);
 	fclose(in);
