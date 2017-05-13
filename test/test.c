@@ -5,22 +5,64 @@
 typedef struct {
 	int n_str;
 	char str;
+} Code;
+
+typedef struct {
+	char *str;
+	//int count = 0;
+} Dictionary_item;
+
+typedef struct {
+	Dictionary_item *dic_i;
+	int size;
+	int capacity;
 } Dictionary;
+
+int find_i(Dictionary dic, char *tmp)
+{
+	for (int i = 0; i < dic.size) {
+		int t = strspn(dic.dic_i[i]->str, tmp);
+		if (t == strlen(tmp)) {
+			return 0;
+		} else {
+			return -1;
+		}
+	}
+}
 
 int main(void)
 {
 	FILE *in = fopen("war.txt", "r");
-
+	Dictionary dic;
+	dic.capacity = 65536;
+	dic.size = 1;
+	dic.dic_i->str = malloc(sizeof(char));
+	dic.dic_i->str = "";
+	
+	char tmp;
+	char *tmp_dic = malloc(sizeof(char) * 256);
+	while (fread(tmp, 1, 1, in) && !feof(in)) {
+		strcat(tmp_dic, tmp);
+		int tmp_i = find_i(dic, tmp_dic);
+		if (!tmp_i) {
+			//strcat(tmp_dic.str, tmp);
+			continue;
+		} else {
+			dic.dic_i[dic.size] = tmp_i;
+		}
+	}
+/*
+	//Dictionary dic[20];
 	//Dictionary *arr[10];
-	Dictionary **arr = malloc(sizeof(Dictionary) * 20);
-	arr[0] = malloc(sizeof(Dictionary));
-	arr[0]->n_str = 0;
-	arr[0]->str = '\0';
-	/*
 	for (int i = 1; i < 10; i++) {
 		arr[i] = NULL;
 	}
-	*/
+	Dictionary **arr = malloc(sizeof(Dictionary) * 20);
+	//arr[0] = malloc(sizeof(Dictionary));
+	arr[0].n_str = 0;
+	arr[0].str = '\0';
+
+
 	char tmp;
 	while (fread(&tmp, 1, 1, in) && !feof(in)) {
 		Dictionary dic_tmp;
@@ -30,12 +72,12 @@ int main(void)
 		for (int i = 0;; i++) {
 			if (!arr[i + 1]) {
 				arr[i + 1] = malloc(sizeof(Dictionary));
-				arr[i + 1]->n_str = dic_tmp.n_str;
-				arr[i + 1]->str = dic_tmp.str;
+				arr[i + 1].n_str = dic_tmp.n_str;
+				arr[i + 1].str = dic_tmp.str;
 				//i = -1;
 				break;
 			}
-			if (dic_tmp.str == arr[i + 1]->str && dic_tmp.n_str == arr[i + 1]->n_str) {
+			if (dic_tmp.str == arr[i + 1]->str && dic_tmp.n_str == arr[i + 1].n_str) {
 				dic_tmp.n_str = i + 1;
 				//printf("%d\n", tmp);
 				fread(&tmp, 1, 1, in);
@@ -52,9 +94,10 @@ int main(void)
 
 
 	FILE *out = fopen("total.txt", "w");
-	for (int i = 0; arr[i]; i++) {
-		fprintf(out, "%d,%c|", arr[i]->n_str, arr[i]->str);
-	}
+	//for (int i = 0; arr[i]; i++) {
+		fwrite(arr, 1, sizeof(arr), out);
+	//}
+*/
 	fclose(out);
 	fclose(in);
 }
