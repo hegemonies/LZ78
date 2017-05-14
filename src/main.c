@@ -7,7 +7,7 @@
 
 int main(void)
 {
-	FILE *in = fopen("txt/war.txt", "r");
+	//FILE *in = fopen("txt/war.txt", "r");
 
 	Dictionary dic;
 	dic_init(&dic);
@@ -15,33 +15,7 @@ int main(void)
 	Code *code = calloc(dic.capacity, sizeof(Code));
 	code_init(code);
 
-	char tmp;
-	//char *tmp_dic = malloc(sizeof(char) * 256);
-	char *tmp_dic = calloc(256, sizeof(char));
-
-	while (fread(&tmp, 1, 1, in)) {
-	//printf("start while:\n");
-	//printf("tmp : %c\n", tmp);
-		strcat(tmp_dic, &tmp);
-	//printf("tmp_dic : %s\n", tmp_dic);
-		int tmp_i = find_i(dic, tmp_dic);
-		if (tmp_i == 1) {
-			break;
-		}
-		if (!tmp_i) {
-			continue;
-		} else {
-		//printf("%s\n", tmp_dic);
-			//dic.dic_i[dic.size].str = malloc(sizeof(char) * slen(tmp_dic));
-			dic.dic_i[dic.size].str = calloc(slen(tmp_dic), sizeof(char));
-			strcat(dic.dic_i[dic.size].str, tmp_dic);
-
-			find_code(code, dic);
-
-			dic.size++;
-			*tmp_dic = '\0';
-		}
-	}
+	compres(&dic, code, "txt/war.txt");
 	
 	//FILE *out = fopen("total.lz78", "w");
 	printf("Dictionary:\n");
@@ -67,6 +41,6 @@ int main(void)
 	//free(tmp_dic);
 	//free_all(tmp_dic, &dic);
 	*/
-	fclose(in);
+	//fclose(in);
 	//fclose(out);
 }

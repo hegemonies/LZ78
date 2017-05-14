@@ -21,10 +21,12 @@ void dic_init(Dictionary *dic);
 
 void code_init(Code *code);
 
-int find_i(const Dictionary dic, char *tmp);
+int find_i(const Dictionary *dic, char *tmp);
 
 void free_all(char *tmp_dic, Dictionary dic);
 
-void find_code(Code *code, const Dictionary dic);
+void find_code(Code *code, const Dictionary *dic);
+
+void compres(Dictionary *dic, Code *code, char *file_name);
 
 #endif
