@@ -4,18 +4,18 @@
 
 void dic_init(Dictionary *dic)
 {
-	dic.capacity = 65536;
-	dic.size = 1;
+	dic->capacity = 65536;
+	dic->size = 1;
 	//dic.dic_i = malloc(sizeof(Dictionary_item) * dic.capacity);
-	dic.dic_i = calloc(dic.capacity, sizeof(Dictionary_item));
+	dic->dic_i = calloc(dic->capacity, sizeof(Dictionary_item));
 	//dic.dic_i[0].str = malloc(sizeof(char));
-	dic.dic_i[0].str = calloc(1, sizeof(char));
+	dic->dic_i[0].str = calloc(1, sizeof(char));
 }
 
 void code_init(Code *code)
 {
 	//Code *code = malloc(sizeof(Code) * dic.capacity);
-	code = calloc(dic.capacity, sizeof(Code));
+	//code = calloc(size, sizeof(Code));
 	//code[0] = malloc(sizeof(Code));
 	code[0].num = 0;
 	code[0].str = '\0';

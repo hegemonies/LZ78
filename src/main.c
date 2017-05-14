@@ -12,7 +12,7 @@ int main(void)
 	Dictionary dic;
 	dic_init(&dic);
 
-	Code *code
+	Code *code = calloc(dic.capacity, sizeof(Code));
 	code_init(code);
 
 	char tmp;
