@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+/* ----------------------------------СТРУКТУРЫ------------------------------*/
 typedef struct {
 	int n_str;
 	char str;
@@ -18,19 +18,76 @@ typedef struct {
 	int capacity;
 } Dictionary;
 
+/*----------------------------------СТРИНГИ---------------------------------*/
+
+int slen(char *str)
+{
+	int count = 0;;
+	for (int i = 0; str[i] != '\0'; i++) {
+		count++;
+	}
+	return count++;
+}
+
+int sspn(char *str, const char *substr)
+{
+	int count = 0;
+	for (int i = 0; str[i] != 0; i++) {
+		if (str[i] == substr[i]) {
+			count++;
+		} else {
+			return count;
+		}
+	}
+	return count;
+}
+
+char *scpy(char *des, const char *src)
+{
+	int i;
+	for (i = 0; src[i] != 0; i++) {
+		des[i] = src[i];
+	}
+	des[i] = 0;
+	return des;
+}
+
+char *scat(char *des, char *src)
+{
+	int j = slen(des);
+	for (int i = 0; src[i] != 0; i++) {
+		des[j] = src[i];
+		j++;
+	}
+	des[j] = 0;
+	return des;
+}
+
+/*-------------------------------------------------------------------*/
+
 int find_i(Dictionary dic, char *tmp)
 {
-	if (!strcmp("\0", tmp)) {
-			return 1;
-		}
+	if (!strcmp("\n", tmp)) {
+		return 1;
+	}
 	for (int i = 0; i < dic.size; i++) {
-		int t = strspn(dic.dic_i[i].str, tmp);
-		if (t == strlen(tmp)) {
+		int t = sspn(dic.dic_i[i].str, tmp);
+		if (t == slen(tmp)) {
 			return 0;
 		}
 	}
 	return -1;
 }
+
+void free_all(char *tmp_dic, Dictionary dic)
+{
+	for (int i = 1; i < dic.capacity; i++) {
+		free(dic.dic_i[i].str);
+	}
+	free(dic.dic_i);
+	free(tmp_dic);
+}
+
 
 int main(void)
 {
@@ -48,30 +105,25 @@ int main(void)
 	while (fread(&tmp, 1, 1, in)) {
 	printf("start while:\n");
 	printf("tmp : %c\n", tmp);
-		strcat(tmp_dic, &tmp);
+		scat(tmp_dic, &tmp);
 	printf("tmp_dic : %s\n", tmp_dic);
 		int tmp_i = find_i(dic, tmp_dic);
-		if (tmp_i == 1) {
-	//printf("НАШЕЛ КОНЕЦ ФАЙЛА\n");
+		if(tmp_i == 1) {
 			break;
 		}
 		if (!tmp_i) {
 	//printf("НАШЕЛ ВХОЖДЕНИЕ\n");
 	//printf("2\n");
-			//strcat(tmp_dic, &tmp);
 			continue;
 		} else {
 	//printf("3ашли\n");
-			if(!strcmp(tmp_dic, "\0")) {
-				break;
-			}
 			printf("%s\n", tmp_dic);
-			dic.dic_i[dic.size].str = malloc(sizeof(char) * strlen(tmp_dic) + 1);
+			dic.dic_i[dic.size].str = malloc(sizeof(char) * slen(tmp_dic));
 	//printf("РАЗ\n");
 			//dic.dic_i[dic.size].str = tmp_dic;
-			strcat(dic.dic_i[dic.size].str, tmp_dic);
+			scat(dic.dic_i[dic.size].str, tmp_dic);
 	//printf("РАЗ\n");
-			dic.dic_i[dic.size].str[strlen(dic.dic_i[dic.size].str) + 1] = 0;
+			//dic.dic_i[dic.size].str[strlen(dic.dic_i[dic.size].str) + 1] = 0;
 	//printf("РАЗ\n");
 			dic.size++;
 	//printf("%s\n", dic.dic_i[dic.size].str);
@@ -79,20 +131,28 @@ int main(void)
 	//printf("%s\n", tmp_dic);
 		}
 	}
-	/*
-	free(tmp_dic);
-	for (int i = 0; i < dic.size ; i++) {
-		free(dic.dic_i[i].str);
-	}
-	free(dic.dic_i);
-	*/
+
+	
+
+	
+
 	
 	//FILE *out = fopen("total.lz78", "w");
-	for (int i = 0; i < dic.size - 1; i++) {
+	for (int i = 0; i < dic.size ; i++) {
 		printf("%d, '%s'\n", i, dic.dic_i[i].str);
 	}
 	//fclose(out);
 	fclose(in);
+	//free_all(tmp_dic, dic);
+	//memset(dic.dic_i, 0x0, dic.capacity);
+
+	for (int i = 1; i < dic.capacity; i++) {
+		free(dic.dic_i[i].str);
+	}
+	free(dic.dic_i);
+	free(tmp_dic);
+
+	//free_all(tmp_dic, &dic);
 /*
 	//Dictionary dic[20];
 	//Dictionary *arr[10];
