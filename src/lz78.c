@@ -67,3 +67,27 @@ void find_code(Code *code, const Dictionary dic)
 	}
 	//free(first_substr);
 }
+
+void compres(Dictionary *dic, Code *code, FILE *in)
+{
+	char tmp[2];
+	char *tmp_dic = calloc(256, sizeof(char));
+	while (fread(&tmp, 1, 1, in)) {
+		tmp[1] = 0;
+		scat(tmp_dic, tmp);
+		int tmp_i = find_i(*dic, tmp_dic);
+		if (tmp_i == 1) {
+			break;
+		} else if (!tmp_i) {
+			continue;
+		} else {
+			dic->dic_i[dic->size].str = calloc(slen(tmp_dic), sizeof(char));
+			scat(dic->dic_i[dic->size].str, tmp_dic);
+
+			find_code(code, *dic);
+
+			dic->size++;
+			*tmp_dic = '\0';
+		}
+	}
+}

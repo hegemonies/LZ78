@@ -14,28 +14,9 @@ int main(void)
 
 	Code *code = calloc(dic.capacity, sizeof(Code));
 	code_init(code);
-
-	char tmp[2];
-	char *tmp_dic = calloc(256, sizeof(char));
+	
 /*--------------------------COMPRES-----------------------------*/
-	while (fread(&tmp, 1, 1, in)) {
-		tmp[1] = 0;
-		scat(tmp_dic, tmp);
-		int tmp_i = find_i(dic, tmp_dic);
-		if (tmp_i == 1) {
-			break;
-		} else if (!tmp_i) {
-			continue;
-		} else {
-			dic.dic_i[dic.size].str = calloc(slen(tmp_dic), sizeof(char));
-			strcat(dic.dic_i[dic.size].str, tmp_dic);
-
-			find_code(code, dic);
-
-			dic.size++;
-			*tmp_dic = '\0';
-		}
-	}
+	compres(&dic, code, in);
 /*--------------------DECOMPRES---------------------------------*/
 	/*
 	Dictionary dic_t;

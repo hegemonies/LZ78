@@ -1,5 +1,6 @@
 #ifndef LZ78_H
 #define LZ78_H
+#include <stdio.h>
 
 typedef struct {
 	int num;
@@ -26,5 +27,7 @@ int find_i(const Dictionary dic, char *tmp);
 void free_all(char *tmp_dic, Dictionary dic);
 
 void find_code(Code *code, const Dictionary dic);
+
+void compres(Dictionary *dic, Code *code, FILE *in);
 
 #endif
