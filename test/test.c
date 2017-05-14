@@ -99,43 +99,29 @@ int main(void)
 	dic.dic_i = malloc(sizeof(Dictionary_item) * dic.capacity);
 	dic.dic_i[0].str = malloc(sizeof(char));
 	dic.dic_i[0].str = "";
-//printf("1\n");
+
 	char tmp;
 	char *tmp_dic = malloc(sizeof(char) * 256);
+
 	while (fread(&tmp, 1, 1, in)) {
-	printf("start while:\n");
-	printf("tmp : %c\n", tmp);
+	//printf("start while:\n");
+	//printf("tmp : %c\n", tmp);
 		scat(tmp_dic, &tmp);
-	printf("tmp_dic : %s\n", tmp_dic);
+	//printf("tmp_dic : %s\n", tmp_dic);
 		int tmp_i = find_i(dic, tmp_dic);
 		if(tmp_i == 1) {
 			break;
 		}
 		if (!tmp_i) {
-	//printf("НАШЕЛ ВХОЖДЕНИЕ\n");
-	//printf("2\n");
 			continue;
 		} else {
-	//printf("3ашли\n");
 			printf("%s\n", tmp_dic);
 			dic.dic_i[dic.size].str = malloc(sizeof(char) * slen(tmp_dic));
-	//printf("РАЗ\n");
-			//dic.dic_i[dic.size].str = tmp_dic;
 			scat(dic.dic_i[dic.size].str, tmp_dic);
-	//printf("РАЗ\n");
-			//dic.dic_i[dic.size].str[strlen(dic.dic_i[dic.size].str) + 1] = 0;
-	//printf("РАЗ\n");
 			dic.size++;
-	//printf("%s\n", dic.dic_i[dic.size].str);
 			*tmp_dic = '\0';
-	//printf("%s\n", tmp_dic);
 		}
 	}
-
-	
-
-	
-
 	
 	//FILE *out = fopen("total.lz78", "w");
 	for (int i = 0; i < dic.size ; i++) {
