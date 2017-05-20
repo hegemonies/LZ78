@@ -2,6 +2,22 @@
 #include <inttypes.h>
 #include <math.h>
 #include "coder.h"
+#include "lz78.h"
+
+void encode_t(Code code, FILE *out)
+{
+	CodeUnit code_unit;
+
+	uint32_t code_point;
+	code_point = code.num;
+	
+	encode(code_point, &code_unit);
+	write_code_unit(out, &code_unit);
+
+	code_point = code.str;
+	encode(code_point, &code_unit);
+	write_code_unit(out, &code_unit);
+}
 
 int encode(uint32_t code_point, CodeUnit *code_units)
 {
@@ -50,35 +66,93 @@ uint32_t decode(const CodeUnit *code_unit)
 	return 0;
 }
 
-
-int read_next_code_unit(FILE *in, CodeUnit *code_units)
+int decode_file(FILE *in, Code *code)
 {
-	uint8_t buffer = 0;
-	fread(&buffer, 1, 1, in);
-	while(!feof(in)) {
-		uint8_t enum_bite = 0;
-		while(buffer & (1 << (7 - enum_bite))) {
-			enum_bite++;
+	CodeUnit code_units;
+
+	uint8_t buf;
+	fread(&buf, 1, 1, in);
+
+	for (int i = 1; !feof(in); i++) {
+		uint8_t enum_bit = 0;
+		while(buf & (1 << (7 - enum_bit))) {
+			enum_bit++;
 		}
-		if (enum_bite == 1) {
-			fread(&buffer, 1, 1, in);
+		if (enum_bit == 1) {
+			fread(&buf, 1, 1, in);
 			continue;
 		}
-		if (enum_bite == 0) {
-			enum_bite = 1;
+		if (enum_bit == 0) {
+			enum_bit = 1;
 		}
-		if (enum_bite <= MaxCodeLength) {
-			code_units->length = 0;
-			for (int i = 1; i <= enum_bite; i++) {
-				code_units->code[i - 1] = buffer;
-				code_units->length++;
-				if (i == enum_bite) {
+		if (enum_bit <= MaxCodeLength) {
+			code_units.length = 0;
+			for (int i = 1; i <= enum_bit; i++) {
+				code_units.code[i - 1] = buf;
+				code_units.length++;
+				if (i == enum_bit) {
 					return 0;
 				}
-				fread(&buffer, 1, 1, in);
-				if ((buffer & 0xC0) != 0x80) {
-					//code_units->code[0] = buffer;
-					//fread(&buffer, 1, 1, in);
+				fread(&buf, 1, 1, in);
+				if (feof(in)) {
+					return 0;
+				}
+				if ((buf & 0xC0) != 0x80) {
+					break;
+				}
+			}
+		}
+		uint32_t tmp = decode(&code_units);
+		code[i].num = tmp;
+
+		fread(&buf, 1, 1, in);
+
+		code[i].str = buf;
+
+		fread(&buf, 1, 1, in);
+	}
+	return 1;
+}
+
+
+void write_to_file(FILE *out, Code *code, Dictionary dic)
+{
+	for (int i = 0; dic.size; i++) {
+		if (code[i].num == 0) {
+			fprintf(out, "%c", code[i].str);
+		} else {
+			fprintf(out, "%s", dic.dic_i[code[i].num].str);
+		}
+	}
+}
+
+/*
+int read_next_code_unit(FILE *in, CodeUnit *code_units)
+{
+	uint8_t buf = 0;
+	fread(&buf, 1, 1, in);
+	while(!feof(in)) {
+		uint8_t enum_bit = 0;
+		while(buf & (1 << (7 - enum_bit))) {
+			enum_bit++;
+		}
+		if (enum_bit == 1) {
+			fread(&buf, 1, 1, in);
+			continue;
+		}
+		if (enum_bit == 0) {
+			enum_bit = 1;
+		}
+		if (enum_bit <= MaxCodeLength) {
+			code_units->length = 0;
+			for (int i = 1; i <= enum_bit; i++) {
+				code_units->code[i - 1] = buf;
+				code_units->length++;
+				if (i == enum_bit) {
+					return 0;
+				}
+				fread(&buf, 1, 1, in);
+				if ((buf & 0xC0) != 0x80) {
 					break;
 				}
 			}
@@ -86,7 +160,7 @@ int read_next_code_unit(FILE *in, CodeUnit *code_units)
 	}
 	return -1;
 }
-
+*/
 int write_code_unit(FILE *out, const CodeUnit *code_unit)
 {
 	if (fwrite(code_unit->code, 1, code_unit->length, out) == code_unit->length) {

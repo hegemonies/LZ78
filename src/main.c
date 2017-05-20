@@ -31,29 +31,29 @@ int main(void)
 
 /*--------------------------COMPRES-----------------------------*/
 	compres(&dic, code, in);
-/*--------------------------DECOMPRES---------------------------*/
-	Dictionary dic_t;
-	dic_init(&dic_t);
-	for (int i = 0; code[i].str; i++) {// TODOOOOOO
 
-		if (!code[i].num) {
-			dic_t.dic_i[dic.size].str = calloc(1, sizeof(char));
-			char *buf = malloc(sizeof(char) + 1);
-			buf[1] = 0;
-			scat(buf, &code[i].str);
-			scat(dic_t.dic_i[dic.size].str, buf);
-			free(buf);
-			continue;
-		} else {
-			char *buf = malloc(sizeof(char) * slen(dic_t.dic_i[code[i].num].str) + 2);
-			scat(buf, dic_t.dic_i[code[i].num].str);
-			buf[slen(dic_t.dic_i[code[i].num].str)] = 0;
-			scat(buf, &code[i].str);
-			printf("%s\n", buf);
-			free(buf);
-		}
+	fclose(in);
+/*------------------------WRITE TO FILE OF COMPRESS--------------*/
+	FILE *out = fopen("out.bin", "w");
+	for (int i = 1; i < dic.size; i++) {
+		encode_t(code[i], out);
 	}
+	fclose(out);
+/*--------------------------DECOMPRES---------------------------*/
+	FILE *in_t = fopen("out.bin", "r");
 
+	Code *codes = calloc(dic.capacity, sizeof(Code));
+	code_init(codes);
+
+	decode_file(in_t, codes);
+
+	fclose(in_t);
+
+	FILE *out_t = fopen("dec_out.txt", "w");
+
+	write_to_file(out_t, codes, dic);
+
+	fclose(out_t);
 
 
 /*---------------------------------------------------------------*/
@@ -75,6 +75,6 @@ int main(void)
 	//free(tmp_dic);
 	//free_all(tmp_dic, &dic);
 	*/
-	fclose(in);
+	
 	//fclose(out);
 }
