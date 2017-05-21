@@ -32,7 +32,7 @@ void free_mem(Code *code, Dictionary dic)
 
 int main()
 {
-	FILE *in = fopen("txt/war.txt", "r");
+	FILE *in = fopen("txt/eng.txt", "r");
 
 /*--------------------------CREATE TO DICTIONARY----------------*/
 	Dictionary dic;
@@ -58,7 +58,7 @@ int main()
 
 	decode_file(in_t, codes);
 
-	print_code(codes, dic.size);
+	//print_code(codes, dic.size);
 
 	fclose(in_t);
 
