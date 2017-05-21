@@ -20,7 +20,7 @@ typedef struct {
 
 void dic_init(Dictionary *dic);
 
-void code_init(Code *code);
+Code *code_init(int size);
 
 int find_i(const Dictionary dic, char *tmp);
 

@@ -91,11 +91,13 @@ int decode_file(FILE *in, Code *code)
 				code_units.code[i - 1] = buf;
 				code_units.length++;
 				if (i == enum_bit) {
-					return 0;
+					//return 0;
+					break;
 				}
 				fread(&buf, 1, 1, in);
 				if (feof(in)) {
-					return 0;
+					//return 0;
+					break;
 				}
 				if ((buf & 0xC0) != 0x80) {
 					break;
@@ -117,11 +119,12 @@ int decode_file(FILE *in, Code *code)
 
 void write_to_file(FILE *out, Code *code, Dictionary dic)
 {
-	for (int i = 0; dic.size; i++) {
+	for (int i = 1; i < dic.size; i++) {
 		if (code[i].num == 0) {
 			fprintf(out, "%c", code[i].str);
 		} else {
 			fprintf(out, "%s", dic.dic_i[code[i].num].str);
+			fprintf(out, "%c", code[i].str);
 		}
 	}
 }

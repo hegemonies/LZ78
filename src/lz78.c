@@ -10,10 +10,12 @@ void dic_init(Dictionary *dic)
 	dic->dic_i[0].str = calloc(1, sizeof(char));
 }
 
-void code_init(Code *code)
+Code *code_init(int size)
 {
+	Code *code = calloc(size, sizeof(Code));
 	code[0].num = 0;
 	code[0].str = '\0';
+	return code;
 }
 
 int find_i(const Dictionary dic, char *tmp)

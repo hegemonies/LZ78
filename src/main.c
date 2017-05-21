@@ -5,20 +5,32 @@
 #include "coder.h"
 #include "strings.h"
 
-void print_dic_and_code(Dictionary dic, Code *code)
+void print_dic(Dictionary dic)
 {
 	printf("Dictionary:\n");
 	for (int i = 0; i < dic.size; i++) {
 		printf("%d, '%s'\n", i, dic.dic_i[i].str);
 	}
-	
+}
+
+void print_code(Code *code, int size)
+{
 	printf("Code:\n");
-	for (int i = 0; i < dic.size; i++) {
+	for (int i = 0; i < size; i++) {
 		printf("%d, %c\n", code[i].num, code[i].str);
 	}
 }
 
-int main(void)
+void free_mem(Code *code, Dictionary dic)
+{
+	free(code);
+	for (int i = 0; i < dic.size; i++) {
+		free(dic.dic_i[i].str);
+	}
+	free(dic.dic_i);
+}
+
+int main()
 {
 	FILE *in = fopen("txt/war.txt", "r");
 
@@ -26,9 +38,7 @@ int main(void)
 	Dictionary dic;
 	dic_init(&dic);
 /*--------------------------CREATE TO CODE----------------------*/
-	Code *code = calloc(dic.capacity, sizeof(Code));
-	code_init(code);
-
+	Code *code = code_init(dic.capacity);
 /*--------------------------COMPRES-----------------------------*/
 	compres(&dic, code, in);
 
@@ -39,13 +49,16 @@ int main(void)
 		encode_t(code[i], out);
 	}
 	fclose(out);
+
+	//free_mem(code, dic);
 /*--------------------------DECOMPRES---------------------------*/
 	FILE *in_t = fopen("out.bin", "r");
 
-	Code *codes = calloc(dic.capacity, sizeof(Code));
-	code_init(codes);
+	Code *codes = code_init(dic.capacity);
 
 	decode_file(in_t, codes);
+
+	print_code(codes, dic.size);
 
 	fclose(in_t);
 
@@ -54,7 +67,6 @@ int main(void)
 	write_to_file(out_t, codes, dic);
 
 	fclose(out_t);
-
 
 /*---------------------------------------------------------------*/
 
@@ -77,4 +89,5 @@ int main(void)
 	*/
 	
 	//fclose(out);
+	return 0;
 }
