@@ -74,8 +74,8 @@ int decode_file(FILE *in, Code *code)
 
 	uint8_t buf;
 	fread(&buf, 1, 1, in);
-
-	for (int i = 1; !feof(in); i++) {
+	int i;
+	for (i = 1; !feof(in); i++) {
 		uint8_t enum_bit = 0;
 		while(buf & (1 << (7 - enum_bit))) {
 			enum_bit++;
@@ -112,8 +112,12 @@ int decode_file(FILE *in, Code *code)
 		code[i].str = buf;
 
 		fread(&buf, 1, 1, in);
+		//printf("%d\n", i);
 	}
-	return 1;
+
+	code[i].num = 0;
+	code[i].str = '~';
+	return 0;
 }
 
 

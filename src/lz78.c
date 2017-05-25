@@ -10,48 +10,62 @@ void dic_init(Dictionary *dic)
 	dic->dic_i[0].str = calloc(1, sizeof(char));
 }
 
-char *get_char_from_codes(Code *code, int *k)
+char *swap_str(char *str)
 {
-	*k = code[*k].num;
-	return &code[*k].str;
+	char *tmp = malloc(sizeof(char) * slen(str));
+	scpy(tmp, str);
+	for (int i = 0; i < slen(str) / 2; i++) {
+		char buf = tmp[i];
+		tmp[i] = tmp[slen(str) - 1 - i];
+		tmp[slen(str) - 1 - i] = buf;
+	}
+	return tmp;
 }
 
 void fill_dic(Dictionary *dic, Code *code)
 {
-	char tmp[2];
-	char *tmp_dic = calloc(256, sizeof(char));
-	for (int i = 1; code[i].str; i++) {
-		tmp[1] = 0;
-		scat(tmp_dic, tmp);
-
+	//char tmp;
+	//char *tmp_dic = calloc(256, sizeof(char));
+	for (int i = 1; code[i].str != '~'; i++) {
 		if (code[i].num == 0) {
-			scat(dic->dic_i[dic->size].str, &code[i].str);
+			dic->dic_i[i].str = malloc(sizeof(char) * 512);
+			char ai[1];
+			ai[0] = code[i].str;
+			//scat(ai, "\0");
+			sncat(dic->dic_i[i].str, ai, 1);
+			//free(ai);
+		//printf("%d::%c\n", i, code[i].str);
 		}
-		char *buf_str = malloc(sizeof(char) * 256);
 		if (code[i].num != 0) {
+			char *buf_str = malloc(sizeof(char) * 256);
 			int k = code[i].num;
+			int count = 0;
 			while (k != 0) {
-				scat(buf_str, get_char_from_codes(code, &k));
+				char t[1];
+				t[0] = code[k].str;
+				//scat(t, "\0");
+				k = code[k].num;
+			//printf("t = %s\n", t);
+				sncat(buf_str, t, 1);
+				//free(t);
+				count++;
+			//printf("%d :: %s\n", i, buf_str);
 			}
+			if (count >= 2) {
+				buf_str = swap_str(buf_str);
+			}
+			dic->dic_i[i].str = malloc(sizeof(char) * slen(buf_str) + 2);
+			sncat(buf_str, "\0", 1);
+			sncat(dic->dic_i[i].str, buf_str, count);
+		//printf("buf_str :=: %s\n", buf_str);
+			free(buf_str);
+			char d[1];
+			d[0] = code[i].str;
+			sncat(dic->dic_i[i].str, d, 1);
 		}
-		scat(dic->dic_i[dic->size].str, buf_str);
-		free(buf_str);
-		/*
-		int tmp_i = find_i(*dic, tmp_dic);
-		if (tmp_i == 1) {
-			break;
-		} else if (!tmp_i) {
-			continue;
-		} else {
-			dic->dic_i[dic->size].str = calloc(slen(tmp_dic), sizeof(char));
-			scat(dic->dic_i[dic->size].str, tmp_dic);
-			dic->size++;
-			*tmp_dic = '\0';
-		}
-		*/
+		dic->size++;
+		//printf("%lu\n", dic->size);
 	}
-
-	free(tmp_dic);
 }
 
 Code *code_init(int size)

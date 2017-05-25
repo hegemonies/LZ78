@@ -14,10 +14,10 @@ void print_dic(Dictionary dic)
 	}
 }
 
-void print_code(Code *code, int size)
+void print_code(Code *code)
 {
 	printf("Code:\n");
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; code[i].str != '~'; i++) {
 		printf("%d, %c\n", code[i].num, code[i].str);
 	}
 }
@@ -33,6 +33,23 @@ void free_mem(Code *code, Dictionary dic)
 
 int main(int argc, char* argv[])
 {
+	/*
+		FILE *in = fopen("out.lz78", "r");
+		Dictionary dic;
+		dic_init(&dic);
+
+		Code *codes = code_init(DIC_CAPACITY);
+
+		decode_file(in, codes);
+
+		//print_code(codes);
+
+		fill_dic(&dic, codes);
+
+		//print_dic(dic);
+
+		fclose(in);
+*/
 /*--------------------------COMPRES------------------------------*/
 	
 	if (!scmp(argv[1], "-c")) {
@@ -64,12 +81,15 @@ int main(int argc, char* argv[])
 		dic_init(&dic);
 
 		Code *codes = code_init(DIC_CAPACITY);
-		fill_dic(&dic, codes);
 		
 		decode_file(in, codes);
+print_code(codes);
+//printf("\n");
+	
+		fill_dic(&dic, codes);
 
 		fclose(in);
-
+print_dic(dic);
 		FILE *out = fopen(argv[3], "w");
 
 		write_to_file_decode(out, codes, dic);
@@ -79,8 +99,10 @@ int main(int argc, char* argv[])
 	}
 	
 /*---------------------------------------------------------------*/
+	/*
 	printf("Help:\n");
 	printf("lz78compress -c -o file.lz78 file.txt # сжатие file.txt в file.lz78 \n");
 	printf("lz78compress -d -o file1.txt file.lz78 # распаковка file.lz78 в file1.txt \n");
+	*/
 	return 0;
 }

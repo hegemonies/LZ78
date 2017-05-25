@@ -20,7 +20,7 @@ typedef struct {
 
 void dic_init(Dictionary *dic);
 
-char *get_char_from_codes(Code *code, int *k);
+char *swap_str(char *str);
 
 void fill_dic(Dictionary *dic, Code *code);
 

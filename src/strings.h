@@ -10,4 +10,8 @@ int scmp(char *mstr, const char *cpstr);
 
 char *scat(char *des, char *src);
 
+char *sncat(char *des, char *src, int size);
+
+char *scpy(char *des, const char *src);
+
 #endif
