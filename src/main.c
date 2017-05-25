@@ -32,26 +32,37 @@ void free_mem(Code *code, Dictionary dic)
 
 int main()
 {
-	FILE *in = fopen("txt/eng.txt", "r");
+	//FILE *in = fopen("txt/eng.txt", "r");
 
 /*--------------------------CREATE TO DICTIONARY----------------*/
 	Dictionary dic;
 	dic_init(&dic);
+
+	fill_dic(&dic, "txt/eng.txt");
+	print_dic(dic);
+
+	return 0;
+	
 /*--------------------------CREATE TO CODE----------------------*/
-	Code *code = code_init(dic.capacity);
+	//Code *code = code_init(dic.capacity);
 /*--------------------------COMPRES-----------------------------*/
+	/*
 	compres(&dic, code, in);
 
 	fclose(in);
+	*/
 /*------------------------WRITE TO FILE OF COMPRESS--------------*/
+	/*
 	FILE *out = fopen("out.bin", "w");
-	for (int i = 1; i < dic.size; i++) {
-		encode_t(code[i], out);
-	}
+
+	encode_file(out, code, dic);
+
 	fclose(out);
 
 	//free_mem(code, dic);
+	*/
 /*--------------------------DECOMPRES---------------------------*/
+	/*
 	FILE *in_t = fopen("out.bin", "r");
 
 	Code *codes = code_init(dic.capacity);
@@ -64,30 +75,10 @@ int main()
 
 	FILE *out_t = fopen("dec_out.txt", "w");
 
-	write_to_file(out_t, codes, dic);
+	write_to_file_decode(out_t, codes, dic);
 
 	fclose(out_t);
-
-/*---------------------------------------------------------------*/
-
-	//FILE *out = fopen("total.lz78", "w");
-	
-	//print_dic_and_code(dic, code);
-	
-	/* нафиг фри
-	for (int i = 1; i < dic.size; i++) {
-		//free(dic.dic_i[i].str);
-		dic.dic_i[i].str = NULL;
-	}
-	//free(code);
-	//code = NULL;
-	//dic.dic_i = NULL;
-	//tmp_dic = NULL;
-	//free(dic.dic_i);
-	//free(tmp_dic);
-	//free_all(tmp_dic, &dic);
 	*/
-	
-	//fclose(out);
-	return 0;
+/*---------------------------------------------------------------*/
+	//return 0;
 }

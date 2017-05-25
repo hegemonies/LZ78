@@ -12,18 +12,18 @@ typedef struct {
     size_t length;
 } CodeUnit;
 
-void encode_t(Code code, FILE *out);
-
 int encode(uint32_t code_point, CodeUnit *code_units);
 
-int decode_file(FILE *in, Code *code);
-
-void write_to_file(FILE *out, Code *code, Dictionary dic);
+void encode_file(FILE *out, Code *code, Dictionary dic);
 
 uint32_t decode(const CodeUnit *code_unit);
+
+int decode_file(FILE *in, Code *code);
 
 int read_next_code_unit(FILE *in, CodeUnit *code_units);
 
 int write_code_unit(FILE *out, const CodeUnit *code_unit);
+
+void write_to_file_decode(FILE *out, Code *code, Dictionary dic);
 
 #endif
