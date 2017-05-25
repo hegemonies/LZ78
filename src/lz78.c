@@ -10,15 +10,33 @@ void dic_init(Dictionary *dic)
 	dic->dic_i[0].str = calloc(1, sizeof(char));
 }
 
-void fill_dic(Dictionary *dic, char *name_file)
+char *get_char_from_codes(Code *code, int *k)
 {
-	FILE *in = fopen(name_file, "r");
+	*k = code[*k].num;
+	return &code[*k].str;
+}
 
+void fill_dic(Dictionary *dic, Code *code)
+{
 	char tmp[2];
 	char *tmp_dic = calloc(256, sizeof(char));
-	while (fread(&tmp, 1, 1, in)) {
+	for (int i = 1; code[i].str; i++) {
 		tmp[1] = 0;
 		scat(tmp_dic, tmp);
+
+		if (code[i].num == 0) {
+			scat(dic->dic_i[dic->size].str, &code[i].str);
+		}
+		char *buf_str = malloc(sizeof(char) * 256);
+		if (code[i].num != 0) {
+			int k = code[i].num;
+			while (k != 0) {
+				scat(buf_str, get_char_from_codes(code, &k));
+			}
+		}
+		scat(dic->dic_i[dic->size].str, buf_str);
+		free(buf_str);
+		/*
 		int tmp_i = find_i(*dic, tmp_dic);
 		if (tmp_i == 1) {
 			break;
@@ -30,10 +48,10 @@ void fill_dic(Dictionary *dic, char *name_file)
 			dic->size++;
 			*tmp_dic = '\0';
 		}
+		*/
 	}
-	free(tmp_dic);
 
-	fclose(in);
+	free(tmp_dic);
 }
 
 Code *code_init(int size)
@@ -105,6 +123,9 @@ void compres(Dictionary *dic, Code *code, FILE *in)
 		} else if (!tmp_i) {
 			continue;
 		} else {
+			if (dic->size == dic->capacity) {
+				clear_dic(dic);
+			}
 			dic->dic_i[dic->size].str = calloc(slen(tmp_dic), sizeof(char));
 			scat(dic->dic_i[dic->size].str, tmp_dic);
 
@@ -117,10 +138,10 @@ void compres(Dictionary *dic, Code *code, FILE *in)
 	free(tmp_dic);
 }
 
-void clear_dic(Dictionary dic)
+void clear_dic(Dictionary *dic)
 {
-	for (int i = 1; i < dic.size; i++) {
-		dic.dic_i[i].str = 0;
+	for (int i = 1; i < dic->size; i++) {
+		dic->dic_i[i].str = 0;
 	}
-	dic.size = 1;
+	dic->size = 1;
 }

@@ -20,7 +20,9 @@ typedef struct {
 
 void dic_init(Dictionary *dic);
 
-void fill_dic(Dictionary *dic, char *name_file);
+char *get_char_from_codes(Code *code, int *k);
+
+void fill_dic(Dictionary *dic, Code *code);
 
 Code *code_init(int size);
 
@@ -31,5 +33,7 @@ void free_all(char *tmp_dic, Dictionary dic);
 void add_code(Code *code, Dictionary dic);
 
 void compres(Dictionary *dic, Code *code, FILE *in);
+
+void clear_dic(Dictionary *dic);
 
 #endif

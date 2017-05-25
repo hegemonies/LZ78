@@ -26,7 +26,7 @@ int sspn(char *str, const char *substr)
 	return count;
 }
 
-int scmp(const char *str, const char *strc)
+int scmp(char *str, const char *strc)
 {
 	int ncount = 0, pcount = 0;
 	for (int i = 0; str[i] != 0; i++) {

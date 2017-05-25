@@ -1,9 +1,10 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 #include "lz78.h"
 #include "coder.h"
 #include "strings.h"
+
+#define DIC_CAPACITY 65536
 
 void print_dic(Dictionary dic)
 {
@@ -30,55 +31,56 @@ void free_mem(Code *code, Dictionary dic)
 	free(dic.dic_i);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-	//FILE *in = fopen("txt/eng.txt", "r");
-
-/*--------------------------CREATE TO DICTIONARY----------------*/
-	Dictionary dic;
-	dic_init(&dic);
-
-	fill_dic(&dic, "txt/eng.txt");
-	print_dic(dic);
-
-	return 0;
+/*--------------------------COMPRES------------------------------*/
 	
-/*--------------------------CREATE TO CODE----------------------*/
-	//Code *code = code_init(dic.capacity);
-/*--------------------------COMPRES-----------------------------*/
-	/*
-	compres(&dic, code, in);
+	if (!scmp(argv[1], "-c")) {
+		FILE *in = fopen(argv[4], "r");
 
-	fclose(in);
-	*/
-/*------------------------WRITE TO FILE OF COMPRESS--------------*/
-	/*
-	FILE *out = fopen("out.bin", "w");
+		Dictionary dic;
+		dic_init(&dic);
 
-	encode_file(out, code, dic);
+		Code *code = code_init(dic.capacity);
 
-	fclose(out);
+		compres(&dic, code, in);
 
-	//free_mem(code, dic);
-	*/
+		fclose(in);
+
+		FILE *out = fopen(argv[3], "w");
+
+		encode_file(out, code, dic);
+
+		fclose(out);
+		return 0;
+	}
+	
 /*--------------------------DECOMPRES---------------------------*/
-	/*
-	FILE *in_t = fopen("out.bin", "r");
+	
+	if (!scmp(argv[1], "-d")) {
+		FILE *in = fopen(argv[4], "r");
 
-	Code *codes = code_init(dic.capacity);
+		Dictionary dic;
+		dic_init(&dic);
 
-	decode_file(in_t, codes);
+		Code *codes = code_init(DIC_CAPACITY);
+		fill_dic(&dic, codes);
+		
+		decode_file(in, codes);
 
-	//print_code(codes, dic.size);
+		fclose(in);
 
-	fclose(in_t);
+		FILE *out = fopen(argv[3], "w");
 
-	FILE *out_t = fopen("dec_out.txt", "w");
+		write_to_file_decode(out, codes, dic);
 
-	write_to_file_decode(out_t, codes, dic);
-
-	fclose(out_t);
-	*/
+		fclose(out);
+		return 0;
+	}
+	
 /*---------------------------------------------------------------*/
-	//return 0;
+	printf("Help:\n");
+	printf("lz78compress -c -o file.lz78 file.txt # сжатие file.txt в file.lz78 \n");
+	printf("lz78compress -d -o file1.txt file.lz78 # распаковка file.lz78 в file1.txt \n");
+	return 0;
 }
