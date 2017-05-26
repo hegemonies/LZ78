@@ -83,13 +83,13 @@ int main(int argc, char* argv[])
 		Code *codes = code_init(DIC_CAPACITY);
 		
 		decode_file(in, codes);
-print_code(codes);
+//print_code(codes);
 //printf("\n");
 	
 		fill_dic(&dic, codes);
 
 		fclose(in);
-print_dic(dic);
+//print_dic(dic);
 		FILE *out = fopen(argv[3], "w");
 
 		write_to_file_decode(out, codes, dic);

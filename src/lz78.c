@@ -29,20 +29,22 @@ void fill_dic(Dictionary *dic, Code *code)
 	for (int i = 1; code[i].str != '~'; i++) {
 		if (code[i].num == 0) {
 			dic->dic_i[i].str = malloc(sizeof(char) * 512);
-			char ai[1];
+			char ai[2];
 			ai[0] = code[i].str;
+			ai[1] = 0;
 			//scat(ai, "\0");
 			sncat(dic->dic_i[i].str, ai, 1);
 			//free(ai);
 		//printf("%d::%c\n", i, code[i].str);
 		}
 		if (code[i].num != 0) {
-			char *buf_str = malloc(sizeof(char) * 256);
+			char *buf_str = calloc(256, sizeof(char));
 			int k = code[i].num;
 			int count = 0;
 			while (k != 0) {
-				char t[1];
+				char t[2];
 				t[0] = code[k].str;
+				t[1] = 0;
 				//scat(t, "\0");
 				k = code[k].num;
 			//printf("t = %s\n", t);
@@ -51,16 +53,18 @@ void fill_dic(Dictionary *dic, Code *code)
 				count++;
 			//printf("%d :: %s\n", i, buf_str);
 			}
+			
 			if (count >= 2) {
 				buf_str = swap_str(buf_str);
 			}
 			dic->dic_i[i].str = malloc(sizeof(char) * slen(buf_str) + 2);
-			sncat(buf_str, "\0", 1);
+			sncat(buf_str, "", 1);
 			sncat(dic->dic_i[i].str, buf_str, count);
 		//printf("buf_str :=: %s\n", buf_str);
 			free(buf_str);
-			char d[1];
+			char d[2];
 			d[0] = code[i].str;
+			d[1] = 0;
 			sncat(dic->dic_i[i].str, d, 1);
 		}
 		dic->size++;

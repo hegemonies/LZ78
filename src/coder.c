@@ -125,8 +125,10 @@ void write_to_file_decode(FILE *out, Code *code, Dictionary dic)
 {
 	for (int i = 1; i < dic.size; i++) {
 		if (code[i].num == 0) {
+			printf("1 :=: %c\n", code[i].str);
 			fprintf(out, "%c", code[i].str);
 		} else {
+			printf("2 :=: %s.%c.%d\n", dic.dic_i[code[i].num].str, code[i].str, code[i].num);
 			fprintf(out, "%s", dic.dic_i[code[i].num].str);
 			fprintf(out, "%c", code[i].str);
 		}
