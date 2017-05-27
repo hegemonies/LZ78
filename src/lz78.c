@@ -26,7 +26,7 @@ void fill_dic(Dictionary *dic, Code *code)
 {
 	//char tmp;
 	//char *tmp_dic = calloc(256, sizeof(char));
-	for (int i = 1; code[i].str != '~'; i++) {
+	for (int i = 1; code[i].str != 0 && code[i].num != 0; i++) {
 		if (code[i].num == 0) {
 			dic->dic_i[i].str = malloc(sizeof(char) * 512);
 			char ai[2];
@@ -90,6 +90,11 @@ int find_i(Dictionary dic, char *tmp)
 		if (len == slen(tmp)) {
 			return 0;
 		}
+		/*
+		if (scmp(dic.dic_i[i].str, tmp)) {
+			return 0;
+		}
+		*/
 	}
 	return -1;
 }
@@ -110,11 +115,13 @@ void add_code(Code *code, Dictionary dic)
 		code[dic.size].str = dic.dic_i[dic.size].str[0];
 		return;
 	}
-
+	/*
 	char second_substr = dic.dic_i[dic.size].str[slen(dic.dic_i[dic.size].str) - 1];
 	code[dic.size].str = second_substr;
-	
-	char *first_substr = calloc(slen(dic.dic_i[dic.size].str), sizeof(char));
+	*/
+	code[dic.size].str = dic.dic_i[dic.size].str[slen(dic.dic_i[dic.size].str) - 1];
+
+	char *first_substr = calloc(slen(dic.dic_i[dic.size].str) + 1, sizeof(char));
 	scat(first_substr, dic.dic_i[dic.size].str);
 	first_substr[slen(dic.dic_i[dic.size].str) - 1] = '\0';
 
@@ -124,6 +131,12 @@ void add_code(Code *code, Dictionary dic)
 			code[dic.size].num = i;
 			break;
 		}
+		/*
+		if (!scmp(first_substr, dic.dic_i[i].str)) {
+			code[dic.size].num = i;
+			break;
+		}
+		*/
 	}
 	free(first_substr);
 }
@@ -144,7 +157,7 @@ void compres(Dictionary *dic, Code *code, FILE *in)
 			if (dic->size == dic->capacity) {
 				clear_dic(dic);
 			}
-			dic->dic_i[dic->size].str = calloc(slen(tmp_dic), sizeof(char));
+			dic->dic_i[dic->size].str = calloc(slen(tmp_dic) + 1, sizeof(char));
 			scat(dic->dic_i[dic->size].str, tmp_dic);
 
 			add_code(code, *dic);

@@ -114,9 +114,7 @@ int decode_file(FILE *in, Code *code)
 		fread(&buf, 1, 1, in);
 		//printf("%d\n", i);
 	}
-
-	code[i].num = 0;
-	code[i].str = '~';
+	
 	return 0;
 }
 
@@ -125,10 +123,10 @@ void write_to_file_decode(FILE *out, Code *code, Dictionary dic)
 {
 	for (int i = 1; i < dic.size; i++) {
 		if (code[i].num == 0) {
-			printf("1 :=: %c\n", code[i].str);
+			//printf("1 :=: %c\n", code[i].str);
 			fprintf(out, "%c", code[i].str);
 		} else {
-			printf("2 :=: %s.%c.%d\n", dic.dic_i[code[i].num].str, code[i].str, code[i].num);
+			//printf("2 :=: %s.%c.%d\n", dic.dic_i[code[i].num].str, code[i].str, code[i].num);
 			fprintf(out, "%s", dic.dic_i[code[i].num].str);
 			fprintf(out, "%c", code[i].str);
 		}

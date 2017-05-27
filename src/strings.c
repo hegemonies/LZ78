@@ -10,7 +10,7 @@ int slen(char *str)
 	for (int i = 0; str[i] != '\0'; i++) {
 		count++;
 	}
-	return count++;
+	return count;
 }
 
 int sspn(char *str, const char *substr)

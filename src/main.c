@@ -17,8 +17,9 @@ void print_dic(Dictionary dic)
 void print_code(Code *code)
 {
 	printf("Code:\n");
-	for (int i = 0; code[i].str != '~'; i++) {
-		printf("%d, %c\n", code[i].num, code[i].str);
+	printf("%d, '%c'\n", code[0].num, code[0].str);
+	for (int i = 1; code[i].str != 0; i++) {
+		printf("%d, '%c'\n", code[i].num, code[i].str);
 	}
 }
 
@@ -52,25 +53,28 @@ int main(int argc, char* argv[])
 */
 /*--------------------------COMPRES------------------------------*/
 	
-	if (!scmp(argv[1], "-c")) {
-		FILE *in = fopen(argv[4], "r");
+	//if (!scmp(argv[1], "-c")) {
+		//FILE *in = fopen(argv[4], "r");
+		FILE *in = fopen("txt/tmp.txt", "r");
 
 		Dictionary dic;
 		dic_init(&dic);
-
+//print_dic(dic);
 		Code *code = code_init(dic.capacity);
-
+//print_code(code);
 		compres(&dic, code, in);
-
+print_dic(dic);
+print_code(code);
 		fclose(in);
 
-		FILE *out = fopen(argv[3], "w");
+		//FILE *out = fopen(argv[3], "w");
+		FILE *out = fopen("out.lz78", "w");
 
-		encode_file(out, code, dic);
+		//encode_file(out, code, dic);
 
 		fclose(out);
 		return 0;
-	}
+	//}
 	
 /*--------------------------DECOMPRES---------------------------*/
 	
