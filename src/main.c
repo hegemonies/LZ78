@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
 		fclose(in);
 */
 /*--------------------------COMPRES------------------------------*/
-	
+	/*
 	if (!scmp(argv[1], "-c")) {
 		FILE *in = fopen(argv[4], "r");
 
@@ -72,11 +72,12 @@ int main(int argc, char* argv[])
 		fclose(out);
 		return 0;
 	}
-	
+	*/
 /*--------------------------DECOMPRES---------------------------*/
 	
-	if (!scmp(argv[1], "-d")) {
-		FILE *in = fopen(argv[4], "r");
+	//if (!scmp(argv[1], "-d")) {
+		FILE *in = fopen("out.lz78", "r");
+		//FILE *in = fopen(argv[4], "r");
 
 		Dictionary dic;
 		dic_init(&dic);
@@ -88,16 +89,18 @@ int main(int argc, char* argv[])
 //printf("\n");
 	
 		fill_dic(&dic, codes);
-
+		print_dic(dic);
+/*
 		fclose(in);
-//print_dic(dic);
+
 		FILE *out = fopen(argv[3], "w");
 
 		write_to_file_decode(out, codes, dic);
 
 		fclose(out);
+*/
 		return 0;
-	}
+	//}
 	
 /*---------------------------------------------------------------*/
 	/*
