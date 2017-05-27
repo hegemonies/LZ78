@@ -53,28 +53,25 @@ int main(int argc, char* argv[])
 */
 /*--------------------------COMPRES------------------------------*/
 	
-	//if (!scmp(argv[1], "-c")) {
-		//FILE *in = fopen(argv[4], "r");
-		FILE *in = fopen("txt/tmp.txt", "r");
+	if (!scmp(argv[1], "-c")) {
+		FILE *in = fopen(argv[4], "r");
 
 		Dictionary dic;
 		dic_init(&dic);
-//print_dic(dic);
+
 		Code *code = code_init(dic.capacity);
-//print_code(code);
+
 		compres(&dic, code, in);
-print_dic(dic);
-print_code(code);
+
 		fclose(in);
 
-		//FILE *out = fopen(argv[3], "w");
-		FILE *out = fopen("out.lz78", "w");
+		FILE *out = fopen(argv[3], "w");
 
-		//encode_file(out, code, dic);
+		encode_file(out, code, dic);
 
 		fclose(out);
 		return 0;
-	//}
+	}
 	
 /*--------------------------DECOMPRES---------------------------*/
 	
