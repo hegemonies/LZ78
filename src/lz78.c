@@ -60,7 +60,11 @@ void fill_dic(Dictionary *dic, Code *code)
 			tmp_code[0] = code[i].str;
 			tmp_code[1] = 0;
 			int k = code[i].num;
+
+			int count = 0;
+
 			while (k != 0) {
+				count++;
 				char s[2];
 				s[0] = code[k].str;
 				s[1] = 0;
@@ -69,15 +73,23 @@ void fill_dic(Dictionary *dic, Code *code)
 
 			}
 			scat(buf_str, tmp_code);
-			/*
+			
 			if (count >= 2) {
-				buf_str = swap_str(buf_str);
+				char *mediator = calloc(slen(buf_str) + 1, sizeof(char));
+				scat(mediator, buf_str);
+				char t[2];
+				t[0] = mediator[slen(buf_str) - 1];
+				t[1] = '\0';
+				mediator[slen(buf_str) - 1] = '\0';
+				buf_str = swap_str(mediator);
+				scat(buf_str, t);
+				free(mediator);
 			}
-			*/
+			
 			dic->dic_i[i].str = calloc(slen(buf_str) + 1, sizeof(char));
 			//scat(buf_str, "");
 			scat(dic->dic_i[i].str, buf_str);
-		printf("buf_str :=: %s\n", buf_str);
+		//printf("buf_str :=: %s\n", buf_str);
 			free(buf_str);
 			/*
 			char d[2];
