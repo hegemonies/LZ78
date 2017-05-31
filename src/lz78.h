@@ -9,7 +9,7 @@ typedef struct {
 
 typedef struct {
 	char *str;
-	//int count = 0;
+	int count;
 } Dictionary_item;
 
 typedef struct {
@@ -18,7 +18,7 @@ typedef struct {
 	int capacity;
 } Dictionary;
 
-void dic_init(Dictionary *dic);
+void dic_init(Dictionary *dic, int capacity);
 
 char *swap_str(char *str);
 

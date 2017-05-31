@@ -2,12 +2,13 @@
 #include "lz78.h"
 #include <stdlib.h>
 
-void dic_init(Dictionary *dic)
+void dic_init(Dictionary *dic, int capacity)
 {
-	dic->capacity = 65536;
+	dic->capacity = capacity;
 	dic->size = 1;
 	dic->dic_i = calloc(dic->capacity, sizeof(Dictionary_item));
 	dic->dic_i[0].str = calloc(1, sizeof(char));
+	dic->dic_i[0].count = 0;
 }
 
 char *swap_str(char *str)
@@ -24,45 +25,26 @@ char *swap_str(char *str)
 
 void fill_dic(Dictionary *dic, Code *code)
 {
-	//char tmp;
-	//char *tmp_dic = calloc(256, sizeof(char));
 	for (int i = 1; code[i].str != 0; i++) {
+		if (i >= dic->capacity) {
+			clear_dic(dic);
+			//remove(dic);
+		}
 		if (code[i].num == 0) {
-			dic->dic_i[i].str = calloc(3, sizeof(char));
+			dic->dic_i[i].str = calloc(2, sizeof(char));
+			dic->dic_i[i].count = 0;
 			char ai[2];
 			ai[0] = code[i].str;
 			ai[1] = 0;
-			//scat(ai, "\0");
 			scat(dic->dic_i[i].str, ai);
-			//free(ai);
-		printf("%d::%c\n", i, code[i].str);
 		}
 		if (code[i].num != 0) {
 			char *buf_str = calloc(256, sizeof(char));
-			/*
-			int k = code[i].num;
-			int count = 0;
-			while (k != 0) {
-				char t[2];
-				t[0] = code[k].str;
-				t[1] = 0;
-				//scat(t, "\0");
-				k = code[k].num;
-			printf("t = %s\n", t);
-				scat(buf_str, t);
-				//free(t);
-				count++;
-			//printf("%d :: %s\n", i, buf_str);
-			}
-			scat(buf_str, );
-			*/
 			char tmp_code[2];
 			tmp_code[0] = code[i].str;
 			tmp_code[1] = 0;
 			int k = code[i].num;
-
 			int count = 0;
-
 			while (k != 0) {
 				count++;
 				char s[2];
@@ -70,10 +52,8 @@ void fill_dic(Dictionary *dic, Code *code)
 				s[1] = 0;
 				scat(buf_str, s);
 				k = code[k].num;
-
 			}
 			scat(buf_str, tmp_code);
-			
 			if (count >= 2) {
 				char *mediator = calloc(slen(buf_str) + 1, sizeof(char));
 				scat(mediator, buf_str);
@@ -85,21 +65,12 @@ void fill_dic(Dictionary *dic, Code *code)
 				scat(buf_str, t);
 				free(mediator);
 			}
-			
 			dic->dic_i[i].str = calloc(slen(buf_str) + 1, sizeof(char));
-			//scat(buf_str, "");
+			dic->dic_i[i].count = 0;
 			scat(dic->dic_i[i].str, buf_str);
-		//printf("buf_str :=: %s\n", buf_str);
 			free(buf_str);
-			/*
-			char d[2];
-			d[0] = code[i].str;
-			d[1] = 0;
-			scat(dic->dic_i[i].str, d);
-			*/
 		}
 		dic->size++;
-		//printf("%lu\n", dic->size);
 	}
 }
 
@@ -119,13 +90,9 @@ int find_i(Dictionary dic, char *tmp)
 	for (int i = 0; i < dic.size; i++) {
 		int len = sspn(dic.dic_i[i].str, tmp);
 		if (len == slen(tmp)) {
+			dic.dic_i[i].count++;
 			return 0;
 		}
-		/*
-		if (scmp(dic.dic_i[i].str, tmp)) {
-			return 0;
-		}
-		*/
 	}
 	return -1;
 }
@@ -146,28 +113,16 @@ void add_code(Code *code, Dictionary dic)
 		code[dic.size].str = dic.dic_i[dic.size].str[0];
 		return;
 	}
-	/*
-	char second_substr = dic.dic_i[dic.size].str[slen(dic.dic_i[dic.size].str) - 1];
-	code[dic.size].str = second_substr;
-	*/
 	code[dic.size].str = dic.dic_i[dic.size].str[slen(dic.dic_i[dic.size].str) - 1];
-
 	char *first_substr = calloc(slen(dic.dic_i[dic.size].str) + 1, sizeof(char));
 	scat(first_substr, dic.dic_i[dic.size].str);
 	first_substr[slen(dic.dic_i[dic.size].str) - 1] = '\0';
-
 	for (int i = 0; i < dic.size; i++) {
 		int len = sspn(dic.dic_i[i].str, first_substr);
 		if (len == slen(first_substr)) {
 			code[dic.size].num = i;
 			break;
 		}
-		/*
-		if (!scmp(first_substr, dic.dic_i[i].str)) {
-			code[dic.size].num = i;
-			break;
-		}
-		*/
 	}
 	free(first_substr);
 }
@@ -189,6 +144,7 @@ void compres(Dictionary *dic, Code *code, FILE *in)
 				clear_dic(dic);
 			}
 			dic->dic_i[dic->size].str = calloc(slen(tmp_dic) + 1, sizeof(char));
+			dic->dic_i[dic->size].count = 0;
 			scat(dic->dic_i[dic->size].str, tmp_dic);
 
 			add_code(code, *dic);
@@ -200,10 +156,34 @@ void compres(Dictionary *dic, Code *code, FILE *in)
 	free(tmp_dic);
 }
 
+typedef struct {
+	int i;
+	int count;	
+} Array;
+
 void clear_dic(Dictionary *dic)
 {
-	for (int i = 1; i < dic->size; i++) {
-		dic->dic_i[i].str = 0;
+	Array array[dic->capacity];
+	for (int i = 0; i < dic->capacity; i++) {
+		array[i].i = i;
+		array[i].count = dic->dic_i[i].count;
 	}
-	dic->size = 1;
+	for (int i = 0; i < dic->capacity; i++) {
+		for (int j = 0; j < dic->capacity; j++) {
+			if (array[i].count < array[j].count) {
+				Array tmp = array[i];
+				array[i] = array[j];
+				array[j] = tmp;
+			}
+		}
+	}
+	int sum = 0;
+	for (int i = 0 ; i < dic->capacity; i++) {
+		sum += array[i].count;
+	}
+	int avarage = sum / dic->capacity;
+	for (int i = 0; i < avarage; i++) {
+		dic->dic_i[array[i].i].count = 0;
+		free(dic->dic_i[array[i].i].str);
+	}
 }
