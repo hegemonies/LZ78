@@ -9,7 +9,7 @@ typedef struct {
 
 typedef struct {
 	char *str;
-	int count;
+	//int count;
 } Dictionary_item;
 
 typedef struct {
@@ -35,5 +35,7 @@ void add_code(Code *code, Dictionary dic);
 void compres(Dictionary *dic, Code *code, FILE *in);
 
 void clear_dic(Dictionary *dic);
+
+//void clear_dic_with_min_usige_elem(Dictionary *dic);
 
 #endif
