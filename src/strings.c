@@ -55,17 +55,6 @@ char *scat(char *des, char *src)
 	return des;
 }
 
-char *sncat(char *des, char *src, int size)
-{
-	int j = slen(des);
-	for (int i = 0; i < size; i++) {
-		des[j] = src[i];
-		j++;
-	}
-	des[j] = 0;
-	return des;
-}
-
 char *scpy(char *des, const char *src)
 {
 	int i;

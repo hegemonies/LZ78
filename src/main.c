@@ -4,36 +4,27 @@
 #include "coder.h"
 #include "strings.h"
 
-void print_dic(Dictionary dic)
+void help()
 {
-	printf("Dictionary:\n");
-	for (int i = 0; i < dic.size; i++) {
-		printf("%d, '%s'\n", i, dic.dic_i[i].str);
-	}
-	printf("\n");
-}
-
-void print_code(Code *code)
-{
-	printf("Code:\n");
-	printf("%d, '%c'\n", code[0].num, code[0].str);
-	for (int i = 1; code[i].str != 0; i++) {
-		printf("%d, '%c'\n", code[i].num, code[i].str);
-	}
+	printf("Help:\n");
+	printf("lz78compress -c -o file.lz78 file.txt # сжатие file.txt в file.lz78 \n");
+	printf("lz78compress -d -o file1.txt file.lz78 # распаковка file.lz78 в file1.txt \n");
 }
 
 int main(int argc, char* argv[])
 {
 	int dic_capacity = 65536;
 	if (argv[1] == NULL || argv[2] == NULL || argv[3] == NULL || argv[4] == NULL) {
-		printf("Help:\n");
-		printf("lz78compress -c -o file.lz78 file.txt # сжатие file.txt в file.lz78 \n");
-		printf("lz78compress -d -o file1.txt file.lz78 # распаковка file.lz78 в file1.txt \n");
+		help();
 		return 1;
 	}
 /*--------------------------COMPRES------------------------------*/
 	if (!scmp(argv[1], "-c")  && !scmp(argv[2], "-o")) {
 		FILE *in = fopen(argv[4], "r");
+		if (!in) {
+			help();
+			return 1;
+		}
 
 		Dictionary dic;
 		dic_init(&dic, dic_capacity);
@@ -58,6 +49,10 @@ int main(int argc, char* argv[])
 	
 	if (!scmp(argv[1], "-d") && !scmp(argv[2], "-o")) {
 		FILE *in = fopen(argv[4], "r");
+		if (!in) {
+			help();
+			return 1;
+		}
 
 		Dictionary dic;
 		dic_init(&dic, dic_capacity);

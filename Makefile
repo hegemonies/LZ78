@@ -1,7 +1,7 @@
-all: bin/main
+all: bin/lz78
 
-bin/main: build/coder.o build/lz78.o build/strings.o build/main.o
-	gcc -Wall -Werror -I src build/coder.o build/lz78.o build/strings.o build/main.o -o bin/main -g
+bin/lz78: build/coder.o build/lz78.o build/strings.o build/main.o
+	gcc -Wall -Werror -I src build/coder.o build/lz78.o build/strings.o build/main.o -o bin/lz78 -g
 
 build/coder.o: src/coder.c
 	gcc -Wall -Werror -I src -c src/coder.c -o build/coder.o -g
